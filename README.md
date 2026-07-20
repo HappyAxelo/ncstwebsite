@@ -38,7 +38,9 @@ Changes appear on the site immediately.
 ADMIN_KEY=your-secret-key
 ```
 
-Data is stored as JSON files in `data/`. Uploaded images go to `data/uploads/`. Back up both when moving hosts.
+Content is stored in Supabase (project `ncst-website`): a `site_content` table for news/collaborators/partners/site text and an `uploads` storage bucket for photos. The JSON files in `data/` are the original seed content, kept as a backup. See `DEPLOYMENT.md` for hosting (free on Vercel + Supabase).
+
+Local development needs a `.env.local` with `SUPABASE_URL` and `SUPABASE_KEY` (never commit this file).
 
 ## Performance note
 

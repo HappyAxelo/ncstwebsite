@@ -1,7 +1,4 @@
-import { promises as fs } from "fs";
-import path from "path";
-
-const DATA_DIR = path.join(process.cwd(), "data");
+import { createClient } from "@supabase/supabase-js";
 
 export type NewsItem = {
   id: string;
@@ -42,52 +39,70 @@ export const defaultSettings: Settings = {
   contactEmail: "info@ur.ac.rw",
 };
 
-async function readJson<T>(file: string, fallback: T): Promise<T> {
+// Server-side only. The key never reaches the browser: all reads and writes
+// happen in server components and route handlers.
+export function db() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_KEY;
+  if (!url || !key) {
+    throw new Error("SUPABASE_URL and SUPABASE_KEY must be set");
+  }
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+async function readDoc<T>(key: string, fallback: T): Promise<T> {
   try {
-    const raw = await fs.readFile(path.join(DATA_DIR, file), "utf-8");
-    return JSON.parse(raw) as T;
+    const { data, error } = await db()
+      .from("site_content")
+      .select("value")
+      .eq("key", key)
+      .maybeSingle();
+    if (error || !data) return fallback;
+    return data.value as T;
   } catch {
     return fallback;
   }
 }
 
-async function writeJson(file: string, data: unknown) {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(path.join(DATA_DIR, file), JSON.stringify(data, null, 2), "utf-8");
+async function writeDoc(key: string, value: unknown) {
+  const { error } = await db()
+    .from("site_content")
+    .upsert({ key, value, updated_at: new Date().toISOString() });
+  if (error) throw new Error(error.message);
 }
 
 export async function getNews(): Promise<NewsItem[]> {
-  const items = await readJson<NewsItem[]>("news.json", []);
+  const items = await readDoc<NewsItem[]>("news", []);
   return items.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export async function saveNews(items: NewsItem[]) {
-  await writeJson("news.json", items);
+  await writeDoc("news", items);
 }
 
 export async function getCollaborators(): Promise<Collaborator[]> {
-  return readJson<Collaborator[]>("collaborators.json", []);
+  return readDoc<Collaborator[]>("collaborators", []);
 }
 
 export async function saveCollaborators(items: Collaborator[]) {
-  await writeJson("collaborators.json", items);
+  await writeDoc("collaborators", items);
 }
 
 export async function getPartners(): Promise<Partner[]> {
-  return readJson<Partner[]>("partners.json", []);
+  return readDoc<Partner[]>("partners", []);
 }
 
 export async function savePartners(items: Partner[]) {
-  await writeJson("partners.json", items);
+  await writeDoc("partners", items);
 }
 
 export async function getSettings(): Promise<Settings> {
-  const stored = await readJson<Partial<Settings>>("settings.json", {});
+  const stored = await readDoc<Partial<Settings>>("settings", {});
   return { ...defaultSettings, ...stored };
 }
 
 export async function saveSettings(s: Settings) {
-  await writeJson("settings.json", s);
+  await writeDoc("settings", s);
 }
 
 export function isAuthorized(req: Request): boolean {
