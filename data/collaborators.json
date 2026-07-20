@@ -1,0 +1,45 @@
+[
+  {
+    "id": "c1",
+    "name": "Dr James Rwigema",
+    "role": "Principal Investigator",
+    "org": "University of Rwanda"
+  },
+  {
+    "id": "c2",
+    "name": "Dr Dackson Masiyano",
+    "role": "Principal Investigator",
+    "org": "University of Malawi"
+  },
+  {
+    "id": "c3",
+    "name": "Happy Axel Muyombano",
+    "role": "Co-Principal Investigator",
+    "org": "University of Rwanda",
+    "photo": "/uploads/mrrqqpcr-gznnz.jpg"
+  },
+  {
+    "id": "c4",
+    "name": "Ndhlozi Nomsa Florence",
+    "role": "Co-Principal Investigator",
+    "org": "University of Malawi"
+  },
+  {
+    "id": "c5",
+    "name": "Susan Kamwenda",
+    "role": "Co-Principal Investigator",
+    "org": "University of Malawi"
+  },
+  {
+    "id": "c6",
+    "name": "Enoch E Mvula",
+    "role": "Co-Principal Investigator",
+    "org": "University of Malawi"
+  },
+  {
+    "id": "c7",
+    "name": "Dr. Justice Stanley Peter Mlatho",
+    "role": "Co-Principal Investigator",
+    "org": "University of Malawi"
+  }
+]

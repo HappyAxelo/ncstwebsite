@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
+@theme {
+  /* University of Rwanda palette (benchmarked from ur.ac.rw) */
+  --color-urblue-600: #1a76d1;
+  --color-urblue-700: #145ea8;
+  --color-urblue-50: #eef5fc;
+  --color-urdeep-700: #00628b;
+  --color-urnavy-900: #16263f;
+  --color-urnavy-950: #0f1b2e;
+  --color-ink-900: #2c2d3f;
+  --color-ink-600: #55606e;
+  --color-ink-400: #8593a3;
+  --color-mist-50: #f5f8fb;
+  --color-mist-200: #e3ebf4;
+  --color-gold-500: #e8a020;
+  --color-leaf-600: #2f9e6e;
+
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --animate-scan: scan 3.5s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+  --animate-dash-flow: dash-flow 1.4s linear infinite;
+}
+
+@keyframes scan {
+  0%, 100% { transform: translateY(-4%); opacity: 0.9; }
+  50% { transform: translateY(104%); opacity: 1; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html.lenis {
+  height: auto;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(26, 118, 209, 0.2);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ---------- shared surfaces ---------- */
+
+.card {
+  background: #ffffff;
+  border: 1px solid var(--color-mist-200);
+  border-radius: 1rem;
+}
+
+.card-hover {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(26, 118, 209, 0.35);
+  box-shadow: 0 14px 34px -18px rgba(20, 60, 110, 0.28);
+}
+
+.grid-lines-dark {
+  background-image:
+    linear-gradient(rgba(122, 176, 235, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 176, 235, 0.07) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

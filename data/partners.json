@@ -1,0 +1,27 @@
+[
+  {
+    "id": "p1",
+    "name": "African Improved Foods (AIF)",
+    "type": "Industry partner, Rwanda"
+  },
+  {
+    "id": "p2",
+    "name": "Small-scale maize mills",
+    "type": "Industry partners, Malawi"
+  },
+  {
+    "id": "p3",
+    "name": "MIT and University of Cambridge",
+    "type": "International research collaboration"
+  },
+  {
+    "id": "p4",
+    "name": "NVIDIA and IBM",
+    "type": "Technology providers"
+  },
+  {
+    "id": "p5",
+    "name": "Government agencies",
+    "type": "Policy and funding support"
+  }
+]

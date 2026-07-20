@@ -1,65 +1,51 @@
-import Image from "next/image";
+import Link from "next/link";
+import HeroSection from "@/components/HeroSection";
+import ChallengeSection from "@/components/ChallengeSection";
+import Architecture from "@/components/Architecture";
+import PhasesSection from "@/components/PhasesSection";
+import NewsCard from "@/components/NewsCard";
+import SectionHeading from "@/components/SectionHeading";
+import { getNews, getSettings } from "@/lib/store";
 
-export default function Home() {
+export const revalidate = 300;
+
+export default async function Home() {
+  const [news, settings] = await Promise.all([getNews(), getSettings()]);
+  const latest = news.slice(0, 3);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <HeroSection title={settings.heroTitle} subtitle={settings.heroSubtitle} />
+      <ChallengeSection about={settings.aboutText} />
+      <Architecture />
+      <PhasesSection />
+
+      {latest.length > 0 && (
+        <section className="border-t border-mist-200 bg-mist-50 py-16">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="flex items-end justify-between">
+              <SectionHeading eyebrow="News" title="Latest from the project" />
+              <Link
+                href="/news"
+                className="hidden text-sm font-semibold text-urblue-600 hover:text-urblue-700 sm:block"
+              >
+                All news →
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {latest.map((n) => (
+                <NewsCard key={n.id} item={n} />
+              ))}
+            </div>
+            <Link
+              href="/news"
+              className="mt-6 inline-block text-sm font-semibold text-urblue-600 sm:hidden"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              All news →
+            </Link>
+          </div>
+        </section>
+      )}
+    </>
   );
 }

@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Machine Vision Research Project — Website
 
-## Getting Started
+Website for **AI-Driven Machine Vision for Quality Control and Waste Reduction in Small-Scale Food Processing Manufacturing in Rwanda and Malawi**, a research collaboration between the University of Rwanda and the University of Malawi.
 
-First, run the development server:
+The theme follows the University of Rwanda's website (ur.ac.rw): white background, UR blue `#1a76d1`, deep blue `#00628b`, Poppins headings.
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build and run
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Note: the site uses server routes for news/team data, so it needs a Node server (`npm start` or a host like Vercel/Railway). It is not a static export.
 
-## Learn More
+## Admin
 
-To learn more about Next.js, take a look at the following resources:
+Go to `/admin` to manage the site without touching code:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **News** — add, edit, delete items, with optional images
+- **Collaborators** — names, roles, institutions and photos
+- **Partners** — the partner list on the team page
+- **Site text** — homepage headline, subheading, "the problem" paragraph, and the contact email
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Changes appear on the site immediately.
 
-## Deploy on Vercel
+- Default admin key: `ur-unima-2026`
+- Change it by setting the `ADMIN_KEY` environment variable (e.g. in `.env.local`):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+ADMIN_KEY=your-secret-key
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Data is stored as JSON files in `data/`. Uploaded images go to `data/uploads/`. Back up both when moving hosts.
+
+## Performance note
+
+`npm run dev` compiles each page the first time you open it, which feels slow. For real-world speed run the production build (`npm run build` then `npm start`) — all pages are served as cached static HTML.
+
+## Pages
+
+| Route | Content |
+|---|---|
+| `/` | 3D conveyor hero, the problem, interactive system architecture, timeline, latest news |
+| `/machine-vision` | Inspection pipeline, detection demo, defect classes |
+| `/maintenance` | Simulated maintenance dashboard, Musanze mill case study |
+| `/impact` | Impact figures, research questions, research outputs |
+| `/news` | All project news |
+| `/team` | Investigators (admin-managed, with photos) and partners |
+| `/contact` | Contact form and map |
+| `/admin` | Content management (key required) |
+
+Content comes from the NCST project proposal (the `.docx` in the parent folder). The contact form drafts an email to `info@ur.ac.rw`; change this in `components/ContactContent.tsx` if the project gets its own address.
