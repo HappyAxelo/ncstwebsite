@@ -46,8 +46,7 @@ export const defaultSettings: Settings = {
 const SUPABASE_URL =
   process.env.SUPABASE_URL || "https://njpgxaxpwngjfokmvkuk.supabase.co";
 const SUPABASE_KEY =
-  process.env.SUPABASE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qcGd4YXhwd25namZva212a3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1NTQxNTUsImV4cCI6MjEwMDEzMDE1NX0.SEXsFM2f1e70BS56hGoezHPFurQyuHlg8XcnoKrdNaQ";
+  process.env.SUPABASE_KEY || "sb_publishable_YSPaE6GVcjmDiOvonl70BA_JzT77rip";
 
 // Server-side only. The key never reaches the browser: all reads and writes
 // happen in server components and route handlers.
