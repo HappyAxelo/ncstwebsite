@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import MaintenanceDashboard from "@/components/MaintenanceDashboard";
 import MaintenanceStory from "@/components/MaintenanceStory";
+import { getContent } from "@/lib/store";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Predictive Maintenance",
@@ -9,16 +12,21 @@ export const metadata: Metadata = {
     "IoT sensors and LSTM networks forecast machine failures in food processing facilities before they happen, replacing reactive repairs with planned maintenance.",
 };
 
-export default function MaintenancePage() {
+export default async function MaintenancePage() {
+  const { maintenance } = await getContent();
   return (
     <>
       <PageHeader
-        eyebrow="Predictive maintenance"
-        title="Fixing machines before they fail"
-        lead="Most small facilities repair equipment only after it breaks, losing production time and raw material with every stoppage. This project uses IoT sensors and LSTM networks to forecast failures and schedule service in advance."
+        eyebrow={maintenance.headerEyebrow}
+        title={maintenance.headerTitle}
+        lead={maintenance.headerLead}
       />
-      <MaintenanceDashboard />
-      <MaintenanceStory />
+      <MaintenanceDashboard
+        eyebrow={maintenance.dashboardEyebrow}
+        title={maintenance.dashboardTitle}
+        lead={maintenance.dashboardLead}
+      />
+      <MaintenanceStory m={maintenance} />
     </>
   );
 }

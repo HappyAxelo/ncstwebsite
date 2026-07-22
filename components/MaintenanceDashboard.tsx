@@ -171,7 +171,15 @@ function HealthTimeline() {
   );
 }
 
-export default function MaintenanceDashboard() {
+export default function MaintenanceDashboard({
+  eyebrow,
+  title,
+  lead,
+}: {
+  eyebrow: string;
+  title: string;
+  lead: string;
+}) {
   const temp = useLiveSeries(64, 3, 0.4);
   const vib = useLiveSeries(4.2, 1.1, 0.25);
   const power = useLiveSeries(11.4, 0.9);
@@ -190,11 +198,7 @@ export default function MaintenanceDashboard() {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading
-          eyebrow="Dashboard preview"
-          title="The machine's vital signs in one view"
-          lead="A simulation of the operator dashboard. IoT sensors stream temperature, vibration and power data into an LSTM model that estimates when each machine will need service."
-        />
+        <SectionHeading eyebrow={eyebrow} title={title} lead={lead} />
 
         <Reveal className="mt-10">
           <div className="card overflow-hidden">

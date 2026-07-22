@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import ImpactContent from "@/components/ImpactContent";
+import { getContent } from "@/lib/store";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Impact",
@@ -8,15 +11,16 @@ export const metadata: Metadata = {
     "Expected impact and research outputs: faster inspection, less waste, safer food, lower costs, publications, datasets and new research labs in Rwanda and Malawi.",
 };
 
-export default function ImpactPage() {
+export default async function ImpactPage() {
+  const { impact } = await getContent();
   return (
     <>
       <PageHeader
-        eyebrow="Impact"
-        title="What the project changes"
-        lead="Better sorting means less wasted grain and safer flour. Predictive maintenance means mills keep running. The numbers below come from the project proposal and the studies it cites."
+        eyebrow={impact.headerEyebrow}
+        title={impact.headerTitle}
+        lead={impact.headerLead}
       />
-      <ImpactContent />
+      <ImpactContent impact={impact} />
     </>
   );
 }

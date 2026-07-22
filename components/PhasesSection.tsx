@@ -2,19 +2,16 @@
 
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
-import { phases } from "@/lib/content";
+import type { SiteContent } from "@/lib/content";
 
-export default function PhasesSection() {
+export default function PhasesSection({ timeline }: { timeline: SiteContent["timeline"] }) {
   return (
     <section className="py-16 sm:py-20" id="roadmap">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading
-          eyebrow="Timeline"
-          title="Three phases over 24 months"
-        />
+        <SectionHeading eyebrow={timeline.eyebrow} title={timeline.title} />
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {phases.map((p, i) => (
-            <Reveal key={p.phase} delay={i * 0.08}>
+          {timeline.phases.map((p, i) => (
+            <Reveal key={i} delay={i * 0.08}>
               <div className="card card-hover relative h-full p-6">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-urblue-600">
@@ -28,14 +25,14 @@ export default function PhasesSection() {
                   {p.title}
                 </h3>
                 <ul className="mt-3 space-y-2">
-                  {p.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-2 text-sm text-ink-600">
+                  {p.points.map((pt, j) => (
+                    <li key={j} className="flex items-start gap-2 text-sm text-ink-600">
                       <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-urblue-600" />
                       {pt}
                     </li>
                   ))}
                 </ul>
-                {i < phases.length - 1 && (
+                {i < timeline.phases.length - 1 && (
                   <span className="absolute -right-3 top-1/2 hidden h-px w-6 bg-urblue-600/40 md:block" />
                 )}
               </div>

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import CountUp from "@/components/CountUp";
-import { impactStats, impactQualitative, outputs, researchQuestions } from "@/lib/content";
+import type { SiteContent } from "@/lib/content";
 import {
   HiOutlineDocumentText,
   HiOutlineCircleStack,
@@ -19,29 +19,30 @@ import {
 } from "react-icons/hi2";
 import type { IconType } from "react-icons";
 
-const outputIcons: Record<string, IconType> = {
-  journal: HiOutlineDocumentText,
-  dataset: HiOutlineCircleStack,
-  code: HiOutlineCodeBracket,
-  patent: HiOutlineShieldCheck,
-  training: HiOutlineAcademicCap,
-  conference: HiOutlinePresentationChartLine,
-  policy: HiOutlineBuildingLibrary,
-  lab: HiOutlineBeaker,
-};
+// Output icons assigned by position; extra outputs cycle through the list.
+const outputIconList: IconType[] = [
+  HiOutlineDocumentText,
+  HiOutlineCircleStack,
+  HiOutlineCodeBracket,
+  HiOutlineShieldCheck,
+  HiOutlineAcademicCap,
+  HiOutlinePresentationChartLine,
+  HiOutlineBuildingLibrary,
+  HiOutlineBeaker,
+];
 
-function ImpactCounters() {
+function ImpactCounters({ impact }: { impact: SiteContent["impact"] }) {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow="Measured impact"
-          title="The numbers behind the project"
-          lead="Figures from the project proposal and the studies it cites."
+          eyebrow={impact.countersEyebrow}
+          title={impact.countersTitle}
+          lead={impact.countersLead}
         />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {impactStats.map((s, i) => (
-            <Reveal key={s.label} delay={(i % 3) * 0.07}>
+          {impact.stats.map((s, i) => (
+            <Reveal key={i} delay={(i % 3) * 0.07}>
               <div className="card card-hover h-full p-6">
                 <p className="font-display text-4xl font-semibold text-urblue-600">
                   <CountUp value={s.value} prefix={s.prefix ?? ""} suffix={s.suffix} />
@@ -57,8 +58,8 @@ function ImpactCounters() {
 
         <Reveal delay={0.1}>
           <div className="card mt-5 grid gap-6 p-6 sm:grid-cols-4 sm:p-7">
-            {impactQualitative.map((x) => (
-              <div key={x.t}>
+            {impact.qualitative.map((x, i) => (
+              <div key={i}>
                 <p className="font-display text-sm font-semibold text-urdeep-700">{x.t}</p>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-ink-600">{x.d}</p>
               </div>
@@ -70,17 +71,14 @@ function ImpactCounters() {
   );
 }
 
-function Questions() {
+function Questions({ impact }: { impact: SiteContent["impact"] }) {
   return (
     <section className="border-y border-mist-200 bg-mist-50 py-16">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading
-          eyebrow="Research questions"
-          title="What the project sets out to answer"
-        />
+        <SectionHeading eyebrow={impact.questionsEyebrow} title={impact.questionsTitle} />
         <div className="mt-8 grid gap-3 md:grid-cols-2">
-          {researchQuestions.map((q, i) => (
-            <Reveal key={q} delay={(i % 2) * 0.06}>
+          {impact.questions.map((q, i) => (
+            <Reveal key={i} delay={(i % 2) * 0.06}>
               <div className="card flex items-start gap-3.5 p-4">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-urblue-50 text-xs font-bold text-urblue-600">
                   {i + 1}
@@ -95,23 +93,23 @@ function Questions() {
   );
 }
 
-function OutputsGrid() {
+function OutputsGrid({ impact }: { impact: SiteContent["impact"] }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
     <section className="py-16" id="outputs">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow="Research outputs"
-          title="What the project produces"
-          lead="Select a card for details."
+          eyebrow={impact.outputsEyebrow}
+          title={impact.outputsTitle}
+          lead={impact.outputsLead}
         />
         <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {outputs.map((o, i) => {
-            const Icon = outputIcons[o.icon];
+          {impact.outputs.map((o, i) => {
+            const Icon = outputIconList[i % outputIconList.length];
             const open = openIdx === i;
             return (
-              <Reveal key={o.title} delay={(i % 4) * 0.05}>
+              <Reveal key={i} delay={(i % 4) * 0.05}>
                 <button
                   onClick={() => setOpenIdx(open ? null : i)}
                   className={`card card-hover w-full p-5 text-left ${
@@ -156,12 +154,12 @@ function OutputsGrid() {
   );
 }
 
-export default function ImpactContent() {
+export default function ImpactContent({ impact }: { impact: SiteContent["impact"] }) {
   return (
     <>
-      <ImpactCounters />
-      <Questions />
-      <OutputsGrid />
+      <ImpactCounters impact={impact} />
+      <Questions impact={impact} />
+      <OutputsGrid impact={impact} />
     </>
   );
 }

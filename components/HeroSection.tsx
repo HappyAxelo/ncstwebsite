@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { HiArrowRight } from "react-icons/hi";
 import CountUp from "@/components/CountUp";
-import { heroStats } from "@/lib/content";
+import type { SiteContent } from "@/lib/content";
 
 const Hero3D = dynamic(() => import("@/components/Hero3D"), {
   ssr: false,
@@ -26,13 +26,7 @@ const item = {
   },
 };
 
-export default function HeroSection({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle: string;
-}) {
+export default function HeroSection({ home }: { home: SiteContent["home"] }) {
   return (
     <section className="relative overflow-hidden bg-urnavy-900">
       <div className="grid-lines-dark absolute inset-0 opacity-60" />
@@ -56,21 +50,21 @@ export default function HeroSection({
             variants={item}
             className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8fc1f7]"
           >
-            University of Rwanda · University of Malawi
+            {home.heroEyebrow}
           </motion.p>
 
           <motion.h1
             variants={item}
             className="font-display mt-5 text-3xl font-semibold leading-[1.15] text-white sm:text-4xl lg:text-[2.9rem]"
           >
-            {title}
+            {home.heroTitle}
           </motion.h1>
 
           <motion.p
             variants={item}
             className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/70"
           >
-            {subtitle}
+            {home.heroSubtitle}
           </motion.p>
 
           <motion.div variants={item} className="mt-8 flex flex-wrap gap-3">
@@ -97,8 +91,8 @@ export default function HeroSection({
           transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/15 bg-white/15 backdrop-blur-sm md:grid-cols-4"
         >
-          {heroStats.map((s) => (
-            <div key={s.label} className="bg-urnavy-900/70 px-5 py-4">
+          {home.heroStats.map((s, i) => (
+            <div key={i} className="bg-urnavy-900/70 px-5 py-4">
               <p className="font-display text-2xl font-semibold text-white">
                 <CountUp value={s.value} suffix={s.suffix} />
               </p>

@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { defaultContent, type SiteContent } from "@/lib/content";
 
 export type NewsItem = {
   id: string;
@@ -20,23 +21,6 @@ export type Partner = {
   id: string;
   name: string;
   type: string;
-};
-
-export type Settings = {
-  heroTitle: string;
-  heroSubtitle: string;
-  aboutText: string;
-  contactEmail: string;
-};
-
-export const defaultSettings: Settings = {
-  heroTitle:
-    "AI machine vision for quality control and waste reduction in food processing",
-  heroSubtitle:
-    "Cameras and neural networks inspect every maize grain on the production line, while IoT sensors watch the machines themselves. A 24-month research project in Rwanda and Malawi.",
-  aboutText:
-    "Workers check maize by eye for mold, discoloration and foreign objects. The method is slow, inconsistent, and misses the contamination that matters most. Aflatoxin, a toxic mold, is linked to liver disease and weakened immunity.",
-  contactEmail: "info@ur.ac.rw",
 };
 
 // Supabase connection for the ncst-website project. These values are baked in
@@ -102,13 +86,37 @@ export async function savePartners(items: Partner[]) {
   await writeDoc("partners", items);
 }
 
-export async function getSettings(): Promise<Settings> {
-  const stored = await readDoc<Partial<Settings>>("settings", {});
-  return { ...defaultSettings, ...stored };
+// Deep-merge stored overrides on top of defaults: plain objects merge key by
+// key, while arrays and primitives are taken wholesale from the stored value
+// when present. This lets new default fields appear automatically after a code
+// update, while user-edited lists fully replace the defaults.
+function deepMerge<T>(base: T, override: unknown): T {
+  if (
+    override &&
+    typeof override === "object" &&
+    !Array.isArray(override) &&
+    base &&
+    typeof base === "object" &&
+    !Array.isArray(base)
+  ) {
+    const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+    for (const [k, v] of Object.entries(override as Record<string, unknown>)) {
+      out[k] = k in (base as Record<string, unknown>)
+        ? deepMerge((base as Record<string, unknown>)[k], v)
+        : v;
+    }
+    return out as T;
+  }
+  return (override === undefined || override === null ? base : (override as T));
 }
 
-export async function saveSettings(s: Settings) {
-  await writeDoc("settings", s);
+export async function getContent(): Promise<SiteContent> {
+  const stored = await readDoc<Partial<SiteContent>>("content", {});
+  return deepMerge(defaultContent, stored);
+}
+
+export async function saveContent(content: SiteContent) {
+  await writeDoc("content", content);
 }
 
 export function isAuthorized(req: Request): boolean {

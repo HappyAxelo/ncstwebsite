@@ -2,31 +2,19 @@
 
 import { useState } from "react";
 import Reveal from "@/components/Reveal";
+import type { SiteContent } from "@/lib/content";
 import {
   HiOutlineMapPin,
   HiOutlineBuildingLibrary,
   HiOutlinePaperAirplane,
 } from "react-icons/hi2";
 
-const institutions = [
-  {
-    name: "University of Rwanda",
-    role: "Primary host institution",
-    where: "Kigali, Rwanda",
-    lead: "Dr James Rwigema, Principal Investigator",
-  },
-  {
-    name: "University of Malawi",
-    role: "Collaborating institution",
-    where: "Zomba, Malawi",
-    lead: "Dr Dackson Masiyano, Principal Investigator",
-  },
-];
-
 const fieldCls =
   "w-full rounded-lg border border-mist-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 outline-none transition-colors focus:border-urblue-600 focus:ring-2 focus:ring-urblue-600/15";
 
-export default function ContactContent({ email }: { email: string }) {
+export default function ContactContent({ contact }: { contact: SiteContent["contact"] }) {
+  const email = contact.email;
+  const institutions = contact.institutions;
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", org: "", message: "" });
 
@@ -46,7 +34,7 @@ export default function ContactContent({ email }: { email: string }) {
         <div className="grid gap-6 lg:grid-cols-[1fr_1.15fr]">
           <div className="space-y-4">
             {institutions.map((inst, i) => (
-              <Reveal key={inst.name} delay={i * 0.06}>
+              <Reveal key={i} delay={i * 0.06}>
                 <div className="card card-hover p-5">
                   <div className="flex items-start gap-4">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-urblue-50 text-lg text-urblue-600">
@@ -84,11 +72,9 @@ export default function ContactContent({ email }: { email: string }) {
           <Reveal direction="left" delay={0.08}>
             <div className="card h-full p-6 sm:p-8">
               <h2 className="font-display text-xl font-semibold text-ink-900">
-                Send a message
+                {contact.formTitle}
               </h2>
-              <p className="mt-1.5 text-sm text-ink-600">
-                For funding, partnership or research inquiries.
-              </p>
+              <p className="mt-1.5 text-sm text-ink-600">{contact.formLead}</p>
 
               {sent ? (
                 <div className="mt-8 rounded-lg border border-leaf-600/30 bg-leaf-600/5 p-6 text-center">

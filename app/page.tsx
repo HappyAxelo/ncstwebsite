@@ -5,20 +5,20 @@ import Architecture from "@/components/Architecture";
 import PhasesSection from "@/components/PhasesSection";
 import NewsCard from "@/components/NewsCard";
 import SectionHeading from "@/components/SectionHeading";
-import { getNews, getSettings } from "@/lib/store";
+import { getNews, getContent } from "@/lib/store";
 
 export const revalidate = 300;
 
 export default async function Home() {
-  const [news, settings] = await Promise.all([getNews(), getSettings()]);
+  const [news, content] = await Promise.all([getNews(), getContent()]);
   const latest = news.slice(0, 3);
 
   return (
     <>
-      <HeroSection title={settings.heroTitle} subtitle={settings.heroSubtitle} />
-      <ChallengeSection about={settings.aboutText} />
-      <Architecture />
-      <PhasesSection />
+      <HeroSection home={content.home} />
+      <ChallengeSection home={content.home} />
+      <Architecture arch={content.architecture} />
+      <PhasesSection timeline={content.timeline} />
 
       {latest.length > 0 && (
         <section className="border-t border-mist-200 bg-mist-50 py-16">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import ContactContent from "@/components/ContactContent";
-import { getSettings } from "@/lib/store";
+import { getContent } from "@/lib/store";
 
 export const revalidate = 300;
 
@@ -12,15 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const settings = await getSettings();
+  const { contact } = await getContent();
   return (
     <>
       <PageHeader
-        eyebrow="Contact"
-        title="Get in touch"
-        lead="We welcome funding agencies, government offices, universities, investors and food manufacturers."
+        eyebrow={contact.headerEyebrow}
+        title={contact.headerTitle}
+        lead={contact.headerLead}
       />
-      <ContactContent email={settings.contactEmail} />
+      <ContactContent contact={contact} />
     </>
   );
 }

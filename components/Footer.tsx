@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { project } from "@/lib/content";
+import { getContent } from "@/lib/store";
 
 const cols = [
   {
@@ -20,7 +20,8 @@ const cols = [
   },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  const { project } = await getContent();
   return (
     <footer className="mt-20 bg-urnavy-900 text-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.6fr_1fr_1fr]">
@@ -29,8 +30,7 @@ export default function Footer() {
             Machine Vision Research Project
           </p>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
-            {project.fullTitle}. Hosted by the University of Rwanda with the
-            University of Malawi as collaborating institution.
+            {project.footerDescription}
           </p>
         </div>
         {cols.map((c) => (
@@ -54,7 +54,7 @@ export default function Footer() {
         ))}
       </div>
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/40">
-        © {new Date().getFullYear()} University of Rwanda · University of Malawi
+        © {new Date().getFullYear()} {project.footerInstitutions}
       </div>
     </footer>
   );

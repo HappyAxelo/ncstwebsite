@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { Collaborator, NewsItem, Partner, Settings } from "@/lib/store";
+import type { Collaborator, NewsItem, Partner } from "@/lib/store";
 import { HiOutlineTrash, HiOutlinePencil, HiOutlinePhoto } from "react-icons/hi2";
+import ContentManager from "@/components/ContentManager";
 
 const fieldCls =
   "w-full rounded-lg border border-mist-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 outline-none transition-colors focus:border-urblue-600 focus:ring-2 focus:ring-urblue-600/15";
@@ -507,92 +508,12 @@ function PartnersManager({ adminKey }: { adminKey: string }) {
   );
 }
 
-/* ---------------- site text manager ---------------- */
-
-function SettingsManager({ adminKey }: { adminKey: string }) {
-  const [form, setForm] = useState<Settings | null>(null);
-  const [msg, setMsg] = useState("");
-
-  useEffect(() => {
-    api("/api/settings", adminKey).then(setForm).catch(() => {});
-  }, [adminKey]);
-
-  if (!form) return <p className="text-sm text-ink-400">Loading…</p>;
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMsg("");
-    try {
-      await api("/api/settings", adminKey, { method: "PUT", body: JSON.stringify(form) });
-      setMsg("Saved. The site updates right away.");
-    } catch (err) {
-      setMsg(err instanceof Error ? err.message : "Failed to save");
-    }
-  };
-
-  return (
-    <form onSubmit={submit} className="card max-w-3xl space-y-4 p-6">
-      <h2 className="font-display text-base font-semibold text-ink-900">Site text</h2>
-      <div>
-        <label className="mb-1.5 block text-xs font-semibold text-ink-600">
-          Homepage headline
-        </label>
-        <textarea
-          rows={2}
-          value={form.heroTitle}
-          onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
-          className={`${fieldCls} resize-none`}
-        />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-xs font-semibold text-ink-600">
-          Homepage subheading
-        </label>
-        <textarea
-          rows={3}
-          value={form.heroSubtitle}
-          onChange={(e) => setForm({ ...form, heroSubtitle: e.target.value })}
-          className={`${fieldCls} resize-none`}
-        />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-xs font-semibold text-ink-600">
-          "The problem" paragraph (homepage)
-        </label>
-        <textarea
-          rows={4}
-          value={form.aboutText}
-          onChange={(e) => setForm({ ...form, aboutText: e.target.value })}
-          className={`${fieldCls} resize-none`}
-        />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-xs font-semibold text-ink-600">
-          Contact email (contact form sends here)
-        </label>
-        <input
-          type="email"
-          value={form.contactEmail}
-          onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
-          className={fieldCls}
-        />
-      </div>
-      <div className="flex items-center gap-3 pt-1">
-        <button type="submit" className={btnPrimary}>
-          Save site text
-        </button>
-        {msg && <span className="text-xs text-ink-400">{msg}</span>}
-      </div>
-    </form>
-  );
-}
-
 /* ---------------- page ---------------- */
 
 export default function AdminPage() {
   const [key, setKey] = useState("");
   const [entered, setEntered] = useState(false);
-  const [tab, setTab] = useState<"news" | "team" | "partners" | "settings">("news");
+  const [tab, setTab] = useState<"content" | "news" | "team" | "partners">("content");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -669,10 +590,10 @@ export default function AdminPage() {
         <div className="mt-6 flex w-fit flex-wrap gap-1 rounded-lg bg-white p-1 ring-1 ring-mist-200">
           {(
             [
+              ["content", "Website content"],
               ["news", "News"],
               ["team", "Collaborators"],
               ["partners", "Partners"],
-              ["settings", "Site text"],
             ] as const
           ).map(([t, label]) => (
             <button
@@ -688,10 +609,10 @@ export default function AdminPage() {
         </div>
 
         <div className="mt-6">
+          {tab === "content" && <ContentManager adminKey={key} />}
           {tab === "news" && <NewsManager adminKey={key} />}
           {tab === "team" && <CollabManager adminKey={key} />}
           {tab === "partners" && <PartnersManager adminKey={key} />}
-          {tab === "settings" && <SettingsManager adminKey={key} />}
         </div>
       </div>
     </div>
